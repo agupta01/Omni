@@ -352,7 +352,7 @@ public class Omni {
 			mean += people[victimList.get(i)].rate;
 		}
 		mean /= (victimList.size() + 0.00);
-		double selfRate = threshold / ((nS + s) + 0.00);
+		double selfRate = 0.5;
 		// DEPRECATED: double selfRate = (sTrials + 0.00) / ((sTrials + nSTrials) + 0.00);
 
 		if (mean <= selfRate) {
