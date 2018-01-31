@@ -53,9 +53,9 @@ public class Omni {
 			holder[z] = new Data();
 		}
 		System.out.println("DISCLAIMER: This program is not designed to replicate real "
-						 + "driving situations and driver/computer actions. It is simply a " 
+						 + "driving situations and driver/computer actions. It is simply a "
 						 + "rudimentary demonstration of supervised machine learning. As "
-						 + "such, use this program to explore how you might react to a " 
+						 + "such, use this program to explore how you might react to a "
 						 + "simplified example of a moral delimma and how a computer may "
 						 + "detect and adjust to your personal preferences. If you believe "
 						 + "you may have an averse reaction to this program, please close it.\n"
@@ -90,10 +90,10 @@ public class Omni {
 		while (done < 10) {
 
 			done = 0;
-			
+
 			// generate random situation
-			situation(dCount);
-			
+			situation(dCount, VOLUME);
+
 			// variables needed for choice robustness
 			String c = "a";
 			boolean end = false;
@@ -126,7 +126,7 @@ public class Omni {
 			for (int i = 0; i < 10; i++) {
 				if (people[i].trials >= CALIBRATION_CONSTANT) {
 					done++;
-				}	
+				}
 			}
 
 			//if (nS < 3 || s < 3)
@@ -141,10 +141,10 @@ public class Omni {
 
 			dCount++;
 			victimList.clear();
-			
+
 		}
 		System.out.println("\n-------Calibration Finished-------");
-		
+
 		trim();
 	}
 
@@ -167,14 +167,14 @@ public class Omni {
 
 	}
 
-	public static void situation(int dCount) {
+	public static void situation(int dCount, int volume) {
 		System.out.println("\n\nIn the car:\n"
 							+ " - You");
 
 		// generates number of people on sidewalk
 		Random random = new Random();
-		int num = random.nextInt(VOLUME) + 1;
-		
+		int num = random.nextInt(volume) + 1;
+
 		// Lists out people on sidewalk
 		System.out.println("On the sidewalk:");
 		for (int x = 0; x < num; x++) {
@@ -184,7 +184,7 @@ public class Omni {
 				if (people[pick].trials < CALIBRATION_CONSTANT) {
 					victimList.add(pick);
 					holder[dCount].victimLog.add(pick);
-					cal = true;	
+					cal = true;
 				}
 			}
 			switch (victimList.get(x)) {
@@ -219,7 +219,7 @@ public class Omni {
 					System.out.println(" - Female senior citizen");
 			}
 		}
-		//System.out.println(victimList.toString());	
+		//System.out.println(victimList.toString());
 	}
 
 	// logs values on all people
@@ -361,5 +361,5 @@ public class Omni {
 
 		return "NO SWERVE";
 	}
-	
+
 }
