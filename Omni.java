@@ -1,5 +1,7 @@
 // Also other factors:
 //		- Type of car
+//		- Race
+//		- Number of ppk (prediction)
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class Omni {
 	*/
 	public static People[] people = new People[10];
 	public static double[] rates = new double[10];
+	// survival rate of self for different population sizes
+	public static double[] numRates = new double[VOLUME];
 	public static Data[] holder = new Data[100];
 	public static Data[] data;
 
@@ -36,8 +40,10 @@ public class Omni {
 	public static double nSTrials = 0.00;
 	public static double s;
 	public static double sTrials = 0.00;
+	public static double selfRate = 0.00;
 	public static double threshold;
 	public static boolean direction = true;
+	public static int volumeHolder;
 
 	public static ArrayList<Integer> victimList = new ArrayList<Integer>();
 
@@ -67,10 +73,6 @@ public class Omni {
 							+ " n - keep going straight, sacrificing yourself.");
 
 		calibration(console);
-		System.out.println("Swerved:   " + sTrials);
-		System.out.println("No-Swerve: " + nSTrials);
-		System.out.println("Self Rate: " + (sTrials + 0.00) / ((sTrials + nSTrials) + 0.00));
-		calculate();
 		System.out.println(Arrays.toString(rates) + "\nNon-swerve: " + nS + "\nSwerve: " + s + "\nThreshold: " + threshold + "\n\n");
 
 		boolean fin = false;
@@ -87,6 +89,8 @@ public class Omni {
 		System.out.println("-------Beginning calibration------");
 		int done = 0;
 		int dCount = 0;
+		boolean manual = false;
+
 		while (done < 10) {
 
 			done = 0;
@@ -116,17 +120,23 @@ public class Omni {
 						nSTrials++;
 						end = true;
 						break;
+					case "manual":
+						end = true;
+						manual = true;
+						manualEntry(console);
+						break;
 					default:
 						System.out.println("You did not enter a valid choice.");
 						break;
 				}
-				//System.out.println(c);
 			}
 
 			for (int i = 0; i < 10; i++) {
 				if (people[i].trials >= CALIBRATION_CONSTANT) {
 					done++;
 				}
+				if (manual == true)
+					done = 11;
 			}
 
 			//if (nS < 3 || s < 3)
@@ -145,7 +155,63 @@ public class Omni {
 		}
 		System.out.println("\n-------Calibration Finished-------");
 
+		if (manual == false) {
+			calculate();
+			selfRate = (sTrials + 0.00) / ((sTrials + nSTrials) + 0.00);
+		}
+		System.out.println("Swerved:   " + sTrials);
+		System.out.println("No-Swerve: " + nSTrials);
+		System.out.println("Self Rate: " + selfRate);
+		
+
 		trim();
+	}
+
+	public static void manualEntry(Scanner console) {
+		System.out.println("You have opted to enter data manually: Enter a number 0-1 for each query below.");
+		System.out.print("Self: ");
+		selfRate = console.nextDouble();
+		for (int i = 0; i < rates.length; i++) {
+			switch (i) {
+				case 0:
+					System.out.print("Male infant: ");
+					break;
+				case 1:
+					System.out.print("Female infant: ");
+					break;
+				case 2:
+					System.out.print("Male teen: ");
+					break;
+				case 3:
+					System.out.print("Female teen: ");
+					break;
+				case 4:
+					System.out.print("Dog: ");
+					break;
+				case 5:
+					System.out.print("Pregnant woman: ");
+					break;
+				case 6:
+					System.out.print("Male adult: ");
+					break;
+				case 7:
+					System.out.print("Female adult: ");
+					break;
+				case 8:
+					System.out.print("Male senior citizen: ");
+					break;
+				case 9:
+					System.out.print("Female senior citizen: ");
+			}
+			rates[i] = console.nextDouble();
+			//System.out.println(Arrays.toString(rates));
+		}
+
+		System.out.println("Enter values for different population sizes:");
+		for (int i = 0; i < numRates.length; i++) {
+			System.out.print(i + 1 + ": ");
+			numRates[i] = console.nextDouble();
+		}
 	}
 
 	public static void trim() {
@@ -173,11 +239,11 @@ public class Omni {
 
 		// generates number of people on sidewalk
 		Random random = new Random();
-		int num = random.nextInt(volume) + 1;
+		volumeHolder = random.nextInt(volume) + 1;
 
 		// Lists out people on sidewalk
 		System.out.println("On the sidewalk:");
-		for (int x = 0; x < num; x++) {
+		for (int x = 0; x < volumeHolder; x++) {
 			boolean cal = false;
 			while(cal == false) {
 				int pick = random.nextInt(10);
@@ -227,6 +293,7 @@ public class Omni {
 		for (int a = 0; a < victimList.size(); a++) {
 			if (c.equalsIgnoreCase("n")) {
 				people[victimList.get(a)].values++;
+				numRates[volumeHolder]++;
 			}
 			people[victimList.get(a)].trials++;
 		}
