@@ -1,7 +1,7 @@
 // Also other factors:
 //		- Type of car
 //		- Race
-//		- Number of ppk (prediction)
+//		- Number of ppl (prediction)
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
