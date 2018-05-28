@@ -73,7 +73,7 @@ public class Omni {
 							+ " n - keep going straight, sacrificing yourself.");
 
 		calibration(console);
-		System.out.println(Arrays.toString(rates) + "\nNon-swerve: " + nS + "\nSwerve: " + s + "\nThreshold: " + threshold + "\n\n");
+		System.out.println(Arrays.toString(rates) + "\n" + Arrays.toString(numRates) + "\nNon-swerve: " + nS + "\nSwerve: " + s + "\nThreshold: " + threshold + "\n\n");
 
 		boolean fin = false;
 		while (fin == false) {
@@ -156,6 +156,7 @@ public class Omni {
 		System.out.println("\n-------Calibration Finished-------");
 
 		if (manual == false) {
+			trim();
 			calculate();
 			selfRate = (sTrials + 0.00) / ((sTrials + nSTrials) + 0.00);
 		}
@@ -164,7 +165,7 @@ public class Omni {
 		System.out.println("Self Rate: " + selfRate);
 		
 
-		trim();
+		
 	}
 
 	public static void manualEntry(Scanner console) {
@@ -293,7 +294,7 @@ public class Omni {
 		for (int a = 0; a < victimList.size(); a++) {
 			if (c.equalsIgnoreCase("n")) {
 				people[victimList.get(a)].values++;
-				numRates[volumeHolder]++;
+				numRates[volumeHolder - 1]++;
 			}
 			people[victimList.get(a)].trials++;
 		}
@@ -375,8 +376,8 @@ public class Omni {
 			//System.out.println(c);
 		}
 
-		System.out.println("Omni Predicted:\t\t\t\t" + prediction());
-		System.out.println("Mean:\t\t\t\t          " + mean);
+		System.out.println("Omni Predicted: \t\t\t\t" + prediction());
+		System.out.println("Omni2 Predicted:\t\t\t\t" + prediction2());
 
 		/*if (prediction().equals(Omar())) {
 			System.out.println("Otis Predicted:\t\t\t\t" + Omar());
@@ -413,6 +414,7 @@ public class Omni {
 
 	// algo using values as survival probabilities
 	static double mean = 0.00;
+
 	public static String prediction() {
 
 		for (int i = 0; i < victimList.size(); i++) {
@@ -422,9 +424,28 @@ public class Omni {
 		double selfRate = 0.5;
 		// DEPRECATED: double selfRate = (sTrials + 0.00) / ((sTrials + nSTrials) + 0.00);
 
-		if (mean <= selfRate) {
+		if (mean <= selfRate)
 			return "SWERVE";
+
+		return "NO SWERVE";
+	}
+
+	public static String prediction2() {
+		mean = 0.00;
+
+		for (int i = 0; i < victimList.size(); i++) {
+			mean += people[victimList.get(i)].rate;
+			System.out.println(people[victimList.get(i)].rate);
+			if (people[victimList.get(i)].rate == 1.0 || people[victimList.get(i)].rate == 1)
+				return "NO SWERVE";
+			System.out.println("Person " + i+1 + " checked!");
 		}
+		mean /= (victimList.size() + 0.00);
+
+		double crit = numRates[volumeHolder - 1];
+
+		if (mean <= crit)
+			return "SWERVE";
 
 		return "NO SWERVE";
 	}
