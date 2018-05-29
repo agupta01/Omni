@@ -1,7 +1,8 @@
-// Also other factors:
-//		- Type of car
-//		- Race
-//		- Number of ppl (prediction)
+/** Also other factors:
+*		- Type of car
+* 		- Race
+*		- Number of ppl (prediction)
+ */
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
@@ -29,63 +30,37 @@ public class Omni {
 		8: male senior
 		9: female senior
 	*/
-	public static People[] people = new People[10];
-	public static double[] rates = new double[10];
+	public People[] people;
+	public double[] rates;
 	// survival rate of self for different population sizes
-	public static double[] numRates = new double[VOLUME];
-	public static Data[] holder = new Data[100];
-	public static Data[] data;
+	public double[] numRates;
+	public Data[] holder;
+	public Data[] data;
 
-	public static double nS;
-	public static double nSTrials = 0.00;
-	public static double s;
-	public static double sTrials = 0.00;
-	public static double selfRate = 0.00;
-	public static double threshold;
-	public static boolean direction = true;
-	public static int volumeHolder;
+	public double nS;
+	public double nSTrials ;
+	public double s;
+	public double sTrials;
+	public double selfRate;
+	public double threshold;
+	public boolean direction;
+	public int volumeHolder;
 
-	public static ArrayList<Integer> victimList = new ArrayList<Integer>();
+	public ArrayList<Integer> victimList;
 
-	public static void main(String[] args) {
-		Scanner console = new Scanner(System.in);
-		// setup people profiles
-		for (int i = 0; i < 10; i++) {
-			people[i] = new People();
-		}
-
-		// setup temp data holder
-		for (int z = 0; z < 100; z++) {
-			holder[z] = new Data();
-		}
-		System.out.println("DISCLAIMER: This program is not designed to replicate real "
-						 + "driving situations and driver/computer actions. It is simply a "
-						 + "rudimentary demonstration of supervised machine learning. As "
-						 + "such, use this program to explore how you might react to a "
-						 + "simplified example of a moral delimma and how a computer may "
-						 + "detect and adjust to your personal preferences. If you believe "
-						 + "you may have an averse reaction to this program, please close it.\n"
-						 + "Thank you.");
-		System.out.println("This is the situation: You are driving on a straight road near a cliff, "
-							+ "when all of a sudden, a sharp curve appears. You are going too fast "
-							+ "to brake, which means you have two options:\n"
-							+ " y - swerve into a group of pedestrians on the sidewalk, killing them.\n"
-							+ " n - keep going straight, sacrificing yourself.");
-
-		calibration(console);
-		System.out.println(Arrays.toString(rates) + "\n" + Arrays.toString(numRates) + "\nNon-swerve: " + nS + "\nSwerve: " + s + "\nThreshold: " + threshold + "\n\n");
-
-		boolean fin = false;
-		while (fin == false) {
-			round2(console);
-			System.out.print("Finish? (y/n): ");
-			String a = console.next();
-			if (a.equalsIgnoreCase("y"))
-				fin = true;
-		}
-
+	public Omni() {
+		people = new People[10];
+		rates = new double[10];
+		numRates = new double[VOLUME];
+		holder = new Data[100];
+		nSTrials = 0.00;
+		sTrials = 0.00;
+		selfRate = 0.00;
+		direction = true;
+		victimList = new ArrayList<Integer>();
 	}
-	public static void calibration(Scanner console) {
+
+	public void calibration(Scanner console) {
 		System.out.println("-------Beginning calibration------");
 		int done = 0;
 		int dCount = 0;
@@ -168,7 +143,7 @@ public class Omni {
 		
 	}
 
-	public static void manualEntry(Scanner console) {
+	public void manualEntry(Scanner console) {
 		System.out.println("You have opted to enter data manually: Enter a number 0-1 for each query below.");
 		System.out.print("Self: ");
 		selfRate = console.nextDouble();
@@ -215,7 +190,7 @@ public class Omni {
 		}
 	}
 
-	public static void trim() {
+	public void trim() {
 		int size= 0;
 		// find # of non-null entries
 		for (int p = 0; p < 100; p++) {
@@ -234,7 +209,7 @@ public class Omni {
 
 	}
 
-	public static void situation(int dCount, int volume) {
+	public void situation(int dCount, int volume) {
 		System.out.println("\n\nIn the car:\n"
 							+ " - You");
 
@@ -290,7 +265,7 @@ public class Omni {
 	}
 
 	// logs values on all people
-	public static void log(String c) {
+	public void log(String c) {
 		for (int a = 0; a < victimList.size(); a++) {
 			if (c.equalsIgnoreCase("n")) {
 				people[victimList.get(a)].values++;
@@ -301,7 +276,7 @@ public class Omni {
 	}
 
 	// finds rate, decision threshold, and direction
-	public static void calculate() {
+	public void calculate() {
 		//compile rates
 		for (int i = 0; i < 10; i++) {
 			people[i].compRate();
@@ -348,7 +323,7 @@ public class Omni {
 	}
 
 	// same thing as calibration, but with prediction and no logging
-	public static void round2(Scanner console) {
+	public void round2(Scanner console) {
 		// reset trials to re-enable all people types
 		for (int a = 0; a < people.length; a++) {
 			people[a].trials = -999;
@@ -415,7 +390,7 @@ public class Omni {
 	// algo using values as survival probabilities
 	static double mean = 0.00;
 
-	public static String prediction() {
+	public String prediction() {
 
 		for (int i = 0; i < victimList.size(); i++) {
 			mean += people[victimList.get(i)].rate;
@@ -430,10 +405,11 @@ public class Omni {
 		return "NO SWERVE";
 	}
 
-	public static String prediction2() {
+	public String prediction2() {
 		mean = 0.00;
 
 		for (int i = 0; i < victimList.size(); i++) {
+			System.out.println(Arrays.toString(numRates));
 			mean += people[victimList.get(i)].rate;
 			System.out.println(people[victimList.get(i)].rate);
 			if (people[victimList.get(i)].rate == 1.0 || people[victimList.get(i)].rate == 1)
