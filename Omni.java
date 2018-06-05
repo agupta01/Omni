@@ -283,6 +283,10 @@ public class Omni {
 			rates[i] = people[i].rate;
 		}
 
+		//for (int i = 0; i < numRates.length; i++) {
+		//	numRates[i] /= (nSTrials + sTrials);
+		//}
+
 		//find averages for non-swerve and swerve values (avg each)
 		for (int i = 0; i < data.length; i++) {	//scrolls through all situations
 			//DEBUG: System.out.println(data[i].logSize() +" " + holder[i].logSize());
@@ -351,7 +355,7 @@ public class Omni {
 			//System.out.println(c);
 		}
 
-		System.out.println("Omni Predicted: \t\t\t\t" + prediction());
+		//System.out.println("Omni Predicted: \t\t\t\t" + prediction());
 		System.out.println("Omni2 Predicted:\t\t\t\t" + prediction2());
 
 		/*if (prediction().equals(Omar())) {
@@ -396,7 +400,7 @@ public class Omni {
 			mean += people[victimList.get(i)].rate;
 		}
 		mean /= (victimList.size() + 0.00);
-		double selfRate = 0.5;
+		//double selfRate = 0.5;
 		// DEPRECATED: double selfRate = (sTrials + 0.00) / ((sTrials + nSTrials) + 0.00);
 
 		if (mean <= selfRate)
@@ -414,7 +418,7 @@ public class Omni {
 			System.out.println(people[victimList.get(i)].rate);
 			if (people[victimList.get(i)].rate == 1.0 || people[victimList.get(i)].rate == 1)
 				return "NO SWERVE";
-			System.out.println("Person " + i+1 + " checked!");
+			System.out.println("Person " + (i+1) + " checked!");
 		}
 		mean /= (victimList.size() + 0.00);
 
